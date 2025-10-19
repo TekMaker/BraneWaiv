@@ -1,4 +1,12 @@
 /*
+  ****** COPYRIGHT WARNING ******
+  This code is free for personal use, if you want to modify the code please credit me it.
+  I assert my copyright Ralph Beardmore, AKA TekMaker (UK). 19/10/2025
+  https://www.youtube.com/@tekmakerUK
+*/
+
+
+/*
    -- BraneWaiv --
    
    To compile this code using RemoteXY library 4.1.4 or later version 
@@ -22,14 +30,14 @@
 //////////////////////////////////////////////
 
 // you can enable debug logging to Serial at 115200
-//#define REMOTEXY__DEBUGLOG    
+//#define REMOTEXY__DEBUGLOG
 
-// RemoteXY select connection mode and include library 
+// RemoteXY select connection mode and include library
 #define REMOTEXY_MODE__WIFI_POINT
 
 #include <WiFi.h>
 
-// RemoteXY connection settings 
+// RemoteXY connection settings
 #define REMOTEXY_WIFI_SSID "RemoteXY"
 #define REMOTEXY_WIFI_PASSWORD "12345678"
 #define REMOTEXY_SERVER_PORT 6377
@@ -38,45 +46,45 @@
 
 #include <RemoteXY.h>
 
-// RemoteXY GUI configuration  
-#pragma pack(push, 1)  
-uint8_t RemoteXY_CONF[] =   // 282 bytes
-  { 255,4,0,3,0,19,1,19,0,0,0,66,114,97,110,101,87,97,105,118,
-  0,195,1,106,200,1,1,11,0,65,44,4,18,18,112,129,25,27,57,12,
-  64,6,66,114,97,110,101,87,97,105,118,0,129,34,60,39,12,64,6,80,
-  97,116,116,101,114,110,0,129,40,96,29,12,64,6,87,97,118,101,0,12,
-  29,74,54,11,195,30,26,49,32,76,69,68,0,53,32,76,69,68,115,0,
-  57,32,76,69,68,115,0,49,51,32,76,69,68,115,0,50,53,32,76,69,
-  68,115,0,12,18,109,76,10,196,30,26,68,101,108,116,97,32,49,45,53,
-  32,72,122,0,84,104,101,116,97,32,52,45,56,32,72,122,0,65,108,112,
-  104,97,32,56,45,49,50,32,72,122,0,66,101,116,97,32,49,51,45,50,
-  53,32,72,122,0,71,97,109,109,97,32,50,53,45,51,53,32,72,122,0,
-  65,109,98,105,101,110,116,0,10,42,169,24,24,48,1,12,31,79,70,70,
-  0,31,79,78,0,129,38,156,34,12,64,6,80,111,119,101,114,0,129,25,
-  40,60,8,0,6,77,111,111,100,32,83,116,105,109,117,108,97,116,111,114,
-  0,4,17,138,75,12,160,6,26,129,36,123,34,12,64,6,83,112,101,101,
-  100,0 };
-  
-// this structure defines all the variables and events of your control interface 
+// RemoteXY GUI configuration
+#pragma pack(push, 1)
+uint8_t RemoteXY_CONF[] =  // 282 bytes
+  { 255, 4, 0, 3, 0, 19, 1, 19, 0, 0, 0, 66, 114, 97, 110, 101, 87, 97, 105, 118,
+    0, 195, 1, 106, 200, 1, 1, 11, 0, 65, 44, 4, 18, 18, 112, 129, 25, 27, 57, 12,
+    64, 6, 66, 114, 97, 110, 101, 87, 97, 105, 118, 0, 129, 34, 60, 39, 12, 64, 6, 80,
+    97, 116, 116, 101, 114, 110, 0, 129, 40, 96, 29, 12, 64, 6, 87, 97, 118, 101, 0, 12,
+    29, 74, 54, 11, 195, 30, 26, 49, 32, 76, 69, 68, 0, 53, 32, 76, 69, 68, 115, 0,
+    57, 32, 76, 69, 68, 115, 0, 49, 51, 32, 76, 69, 68, 115, 0, 50, 53, 32, 76, 69,
+    68, 115, 0, 12, 18, 109, 76, 10, 196, 30, 26, 68, 101, 108, 116, 97, 32, 49, 45, 53,
+    32, 72, 122, 0, 84, 104, 101, 116, 97, 32, 52, 45, 56, 32, 72, 122, 0, 65, 108, 112,
+    104, 97, 32, 56, 45, 49, 50, 32, 72, 122, 0, 66, 101, 116, 97, 32, 49, 51, 45, 50,
+    53, 32, 72, 122, 0, 71, 97, 109, 109, 97, 32, 50, 53, 45, 51, 53, 32, 72, 122, 0,
+    65, 109, 98, 105, 101, 110, 116, 0, 10, 42, 169, 24, 24, 48, 1, 12, 31, 79, 70, 70,
+    0, 31, 79, 78, 0, 129, 38, 156, 34, 12, 64, 6, 80, 111, 119, 101, 114, 0, 129, 25,
+    40, 60, 8, 0, 6, 77, 111, 111, 100, 32, 83, 116, 105, 109, 117, 108, 97, 116, 111, 114,
+    0, 4, 17, 138, 75, 12, 160, 6, 26, 129, 36, 123, 34, 12, 64, 6, 83, 112, 101, 101,
+    100, 0 };
+
+// this structure defines all the variables and events of your control interface
 struct {
 
-    // input variables
-  uint8_t patternSelector; // from 0 to 5
-  uint8_t waveSelector; // from 0 to 6
-  uint8_t btnPower; // =1 if state is ON, else =0, from 0 to 1
-  int8_t speed; // from -100 to 100
+  // input variables
+  uint8_t patternSelector;  // from 0 to 5
+  uint8_t waveSelector;     // from 0 to 6
+  uint8_t btnPower;         // =1 if state is ON, else =0, from 0 to 1
+  int8_t speed;             // from -100 to 100
 
-    // output variables
-  uint8_t led_01_r; // =0..255 LED Red brightness, from 0 to 255
-  uint8_t led_01_g; // =0..255 LED Green brightness, from 0 to 255
-  uint8_t led_01_b; // =0..255 LED Green brightness, from 0 to 255
+  // output variables
+  uint8_t led_01_r;  // =0..255 LED Red brightness, from 0 to 255
+  uint8_t led_01_g;  // =0..255 LED Green brightness, from 0 to 255
+  uint8_t led_01_b;  // =0..255 LED Green brightness, from 0 to 255
 
-    // other variable
+  // other variable
   uint8_t connect_flag;  // =1 if wire connected, else =0
 
-} RemoteXY;   
+} RemoteXY;
 #pragma pack(pop)
- 
+
 /////////////////////////////////////////////
 //           END RemoteXY include          //
 /////////////////////////////////////////////
@@ -86,7 +94,10 @@ struct {
 /////////////////////////////////////////////
 //              START MY CODE              //
 /////////////////////////////////////////////
-
+/*
+  This code is free for personal use, if you want to modify the code please credit me it.
+  I assert my copyright Ralph Beardmore AKA, TekMaker (UK). 19/10/2025
+*/
 #include <Adafruit_NeoPixel.h>
 //#define LED_BUILTIN 2  // just for indication on board
 #define PIN_WS2812B 8  // The ESP32 pin GPIO16 connected to WS2812B
@@ -145,7 +156,7 @@ level 4-13 leds
 0 1 0 1 0 
 1 0 1 0 1
 
-level 5-13 leds
+level 5-25 leds
 1 1 1 1 1 
 1 1 1 1 1 
 1 1 1 1 1
@@ -164,11 +175,11 @@ int patterns[numPatterns][25] = {
 };
 
 // global variables for modes
-unsigned int pattern = 0;  // 0 indexed
-unsigned int wave = 0;     // 0 indexed
-unsigned int steps = 10;   // number of brightness steps
-unsigned long startTime;   // time start pressed
-unsigned long curTime;     // current milliseconds
+uint8_t pattern = 0;      // 0 indexed
+uint8_t wave = 0;         // 0 indexed
+uint8_t steps = 10;       // number of brightness steps
+unsigned long startTime;  // time start pressed
+unsigned long curTime;    // current milliseconds
 
 // define ws2812 object
 Adafruit_NeoPixel ws2812b(NUM_PIXELS, PIN_WS2812B, NEO_GRB + NEO_KHZ800);
@@ -203,7 +214,7 @@ void loop() {
   Serial.print(" ");
   Serial.print(mode[wave]);
   Serial.print(" ");
-  Serial.println(RemoteXY.speed);
+  Serial.println(speed);
 
   if (RemoteXY.connect_flag == 0) {  // kill display until connected
     flashLEDs(0, 0, 0, dly, pattern, steps);
@@ -219,7 +230,6 @@ void loop() {
       showAmbient(colour[wave][0], colour[wave][1], colour[wave][2], pattern);
     }
   }
-  
 }
 
 void showAmbient(int r, int g, int b, int pattern) {
@@ -227,52 +237,47 @@ void showAmbient(int r, int g, int b, int pattern) {
     if (patterns[pattern][pixel] == 1 && RemoteXY.btnPower == 1) {
       ws2812b.setPixelColor(pixel, ws2812b.Color(r, g, b));
     } else {
-      ws2812b.setPixelColor(pixel, ws2812b.Color(0, 0, 0));
+      ws2812b.clear();
     }
   }
   ws2812b.show();
 }
 
 void flashLEDs(float r, float g, float b, int dly, int index, float stepsCount) {
-  int d = dly / (2 * stepsCount);
 
   // to make the effect less annoying we'll use to separate loops to increment and decrement
   // the brightness gradually in stepsCount steps
 
   for (int step = 0; step <= stepsCount; step++) {  // step loop increasing brightness
-    int rval = r * (step / stepsCount);
-    int gval = g * (step / stepsCount);
-    int bval = b * (step / stepsCount);
+    int d = dly / (2 * stepsCount);
+    int rval = (r * step) / stepsCount;
+    int gval = (g * step) / stepsCount;
+    int bval = (b * step) / stepsCount;
 
     for (int pixel = 0; pixel < NUM_PIXELS; pixel++) {  // pixel loop
       if (patterns[index][pixel] == 1 && RemoteXY.btnPower == 1) {
-        int rval = (r * step) / stepsCount;
-        int gval = (g * step) / stepsCount;
-        int bval = (b * step) / stepsCount;
-        RemoteXY.led_01_r = rval;  // porgram the RGB led on RemoteXY
+        RemoteXY.led_01_r = rval;  // program the RGB led on RemoteXY
         RemoteXY.led_01_g = gval;
         RemoteXY.led_01_b = bval;
         ws2812b.setPixelColor(pixel, ws2812b.Color(rval, gval, bval));
       } else {
-        if (dly > 20) {  // then show a solid ambient color
+        if (dly > 2) {  // then show a solid ambient color
           ws2812b.setPixelColor(pixel, ws2812b.Color(0, 0, 0));
         }
       }
     }
     ws2812b.show();
-    RemoteXY_delay(d / 2);
+    RemoteXY_delay(d);
   }
 
   for (int step = stepsCount; step >= 0; step--) {  // step loop decreasing brightness
+    int d = dly / (2 * stepsCount);
     int rval = r * (step / stepsCount);
     int gval = g * (step / stepsCount);
     int bval = b * (step / stepsCount);
 
     for (int pixel = 0; pixel < NUM_PIXELS; pixel++) {  // pixel loop
       if (patterns[index][pixel] == 1 && RemoteXY.btnPower == 1) {
-        RemoteXY.led_01_r = rval;
-        RemoteXY.led_01_g = gval;
-        RemoteXY.led_01_b = bval;
         ws2812b.setPixelColor(pixel, ws2812b.Color(rval, gval, bval));
       } else {
         if (dly > 20) {
@@ -281,6 +286,6 @@ void flashLEDs(float r, float g, float b, int dly, int index, float stepsCount) 
       }
     }
     ws2812b.show();
-    RemoteXY_delay(d / 2);
+    RemoteXY_delay(d);
   }
 }
